@@ -37,8 +37,13 @@ Network.prototype.initialize = function () {
 
 
     connectButton = this.app.root.findByName('connectButton');
-    option1Button = this.app.root.findByName('option1Button')
-    option2Button = this.app.root.findByName('option2Button')
+    option1Button = this.app.root.findByName('option1Button');
+    option2Button = this.app.root.findByName('option2Button');
+    option3Button = this.app.root.findByName('option3Button');
+    option4Button = this.app.root.findByName('option4Button');
+    option5Button = this.app.root.findByName('option5Button');
+    select = this.app.root.findByName('Select')
+    
     inputField = this.app.root.findByName('Input');
     waitText = this.app.root.findByName('waitText');
 
@@ -49,12 +54,10 @@ Network.prototype.initialize = function () {
     Network.inputText = this.app.root.findByName('Input');
     chatTextTemplate = this.app.assets.find('chatText', 'template').resource;
     chatBoxContent = this.app.root.findByName('chatBoxContent');
-    chatInputBox = this.app.root.findByName('chatInputBox');
     chatSendButton = this.app.root.findByName('chatSendButton');
     chatEntity = this.app.root.findByName('chatEntity');
     chatScroll = this.app.root.findByName('VerticalScrollbar');
 
-    console.log(chatInputBox.script.input);
     //Use your hosted server
     //Here is the server code https://glitch.com/edit/#!/player-server
 
@@ -66,39 +69,6 @@ Network.prototype.initialize = function () {
     initializeEvents();
 
     InitializeUI();
-
-// Thêm biến trạng thái kiểm tra
-var isChatActive = false; // Kiểm tra xem người dùng có đang gõ chat hay không
-
-this.app.keyboard.on(pc.EVENT_KEYDOWN, function (event) {
-    if (event.key === pc.KEY_ENTER) {
-        if (!isChatActive) {
-            // Khi không ở chế độ chat, kích hoạt chế độ gõ chat
-            isChatActive = true;
-            chatInputBox.enabled = true; // Bật ô nhập liệu chat
-            chatInputBox.script.input.element.focus(); // Đặt con trỏ vào ô nhập liệu
-            var app = this.app;
-            app.mouse.disablePointerLock(); // Vô hiệu hóa pointer lock
-        } else {
-            // Khi đang ở chế độ chat, gửi tin nhắn
-            OnSendMsg(); // Gửi tin nhắn
-            chatInputBox.enabled = false; // Tắt ô nhập liệu sau khi gửi
-            isChatActive = false; // Thoát chế độ chat
-            var app = this.app;
-            app.mouse.enablePointerLock(); // Kích hoạt lại pointer lock nếu cần
-        }
-    }
-}, this);
-
-// Xử lý khi nhấn nút gửi (giữ nguyên cho trường hợp người dùng dùng chuột)
-chatSendButton.element.on('click', function () {
-    OnSendMsg(); // Gửi tin nhắn
-    chatInputBox.enabled = false; // Tắt ô nhập liệu sau khi gửi
-    isChatActive = false; // Thoát chế độ chat
-    var app = this.app;
-    app.mouse.enablePointerLock(); // Kích hoạt lại pointer lock nếu cần
-}, this);
-
 };
 
 function InitializeUI(){
@@ -116,15 +86,23 @@ function InitializeUI(){
 
         option1Button.enabled = true;
         option2Button.enabled = true;
+        option3Button.enabled = true;
+        option4Button.enabled = true;
+        option5Button.enabled = true;
+        select.enabled = true;
 
         console.log("Name entered:", Network.playerName);
     });
 
     // character selection
     option1Button.element.on('click', function (){
-        Network.modelName = 'Marcille';
+        Network.modelName = 'Frieren';
         option1Button.enabled = false;
         option2Button.enabled = false;
+        option3Button.enabled = false;
+        option4Button.enabled = false;
+        option5Button.enabled = false;
+        select.enabled = false;
 
         console.log("Character selected:", Network.modelName);
 
@@ -133,9 +111,58 @@ function InitializeUI(){
     });
 
     option2Button.element.on('click', function (){
-        Network.modelName = 'Frieren';
-        option1Button.enabled = false; 
+        Network.modelName = 'Garou';
+        option1Button.enabled = false;
         option2Button.enabled = false;
+        option3Button.enabled = false;
+        option4Button.enabled = false;
+        option5Button.enabled = false;
+        select.enabled = false;
+
+        console.log("Character selected:", Network.modelName);
+
+        connect();
+        waitText.enabled = true;
+    });
+
+        option3Button.element.on('click', function (){
+        Network.modelName = 'Goku';
+        option1Button.enabled = false;
+        option2Button.enabled = false;
+        option3Button.enabled = false;
+        option4Button.enabled = false;
+        option5Button.enabled = false;
+        select.enabled = false;
+
+        console.log("Character selected:", Network.modelName);
+
+        connect();
+        waitText.enabled = true;
+    });
+
+        option4Button.element.on('click', function (){
+        Network.modelName = 'Inosuke';
+        option1Button.enabled = false;
+        option2Button.enabled = false;
+        option3Button.enabled = false;
+        option4Button.enabled = false;
+        option5Button.enabled = false;
+        select.enabled = false;
+
+        console.log("Character selected:", Network.modelName);
+
+        connect();
+        waitText.enabled = true;
+    });
+
+        option5Button.element.on('click', function (){
+        Network.modelName = 'Marcille';
+        option1Button.enabled = false;
+        option2Button.enabled = false;
+        option3Button.enabled = false;
+        option4Button.enabled = false;
+        option5Button.enabled = false;
+        select.enabled = false;
 
         console.log("Character selected:", Network.modelName);
 
@@ -160,7 +187,6 @@ function initializeEvents() {
     _socket.on('register', function (data) {
         register(data);
         waitText.enabled = false;
-        chatEntity.enabled = true;
     });
 
     _socket.on('spawn', function (data) {
